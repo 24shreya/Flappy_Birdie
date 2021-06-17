@@ -4,6 +4,7 @@ from typing import Mapping
 import pygame                               #library for making of a game
 from pygame.locals import *                 #basic pygame imports
 import os
+#import time
 
 
 
@@ -12,13 +13,18 @@ import os
 sourceFileDir = os.path.dirname(os.path.abspath(__file__))
 FPS = 32                                    #frames per second
 SCREENWIDTH = 500
-SCREENHEIGHT = 700
-SCREEN = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT)) 
-GROUNDY= SCREENHEIGHT * 0.8    
+SCREENHEIGHT = 650
+SCREEN = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
+gameIcon_path = os.path.join(sourceFileDir, 'media/images/bird_fly.png') 
+gameIcon = pygame.image.load(gameIcon_path)
+pygame.display.set_icon(gameIcon)
+
+
+GROUNDY= SCREENHEIGHT * 0.75    
 GAME_IMAGES = {}
 GAME_AUDIO = {}
 PLAYER = os.path.join(sourceFileDir, 'media/images/bird_fly.png')
-BACKGROUND = os.path.join(sourceFileDir, 'media/images/bg_img.png')
+BACKGROUND = os.path.join(sourceFileDir, 'media/images/bg_img.jpg')
 PIPE = os.path.join(sourceFileDir, 'media/images/pipe.png')
 
 
@@ -33,7 +39,8 @@ def welcome_screen():
     # defining position via coordinates 
     messagex = int((SCREENWIDTH - GAME_IMAGES['message'].get_height())/1.1)
     messagey = int(SCREENHEIGHT*0.20)
-    basex = 0
+    basex = -5
+    GAME_AUDIO['song'].play()
     
     while True:
         for event in pygame.event.get():                # getting access to all events of pygame
@@ -44,6 +51,7 @@ def welcome_screen():
                 sys.exit()
 
             elif event.type == KEYDOWN and (event.key == K_SPACE or event.key == K_UP):
+                GAME_AUDIO['song'].stop()
                 return
 
             else:
@@ -63,9 +71,9 @@ def mainGame():
     score = 0
     playerx = int(SCREENWIDTH/5)
     playery = int(SCREENWIDTH/5)
-    basex = 0
+    basex = -5
     game_overx = int((SCREENWIDTH - GAME_IMAGES['over'].get_height())/2.5)
-    game_overy = int(SCREENHEIGHT/4.5)
+    game_overy = int(SCREENHEIGHT/3)
     
 
     # creating two pipes
@@ -75,8 +83,8 @@ def mainGame():
 
     # making of a list of upper pipes that will contain two upper pipes i.e. one from the list Pipe1 & second from the list Pipe2
     upperPipes = [
-        {'x' : SCREENWIDTH + 200, 'y' : Pipe1[0]['y']},
-        {'x' : SCREENWIDTH + 200 + (SCREENWIDTH/2), 'y' : Pipe2[0]['y']},
+        {'x' : SCREENWIDTH + 100, 'y' : Pipe1[0]['y']},
+        {'x' : SCREENWIDTH + 100 + (SCREENWIDTH/2), 'y' : Pipe2[0]['y']},
     ]
 
 
@@ -167,7 +175,7 @@ def mainGame():
         
         for digit in myDgits:
             width += GAME_IMAGES['numbers'][digit].get_width()    
-        Xoffset = (SCREENWIDTH - width)/2
+            Xoffset = (SCREENWIDTH - width)/2
 
         for digit in myDgits:
             SCREEN.blit(GAME_IMAGES['numbers'][digit], (Xoffset, SCREENHEIGHT * 0.12 ))
@@ -175,6 +183,7 @@ def mainGame():
 
         if is_collide(playerx, playery, upperPipes, lowerPipes):
             SCREEN.blit(GAME_IMAGES['over'], (game_overx, game_overy))
+            #time.sleep(2)
         
         pygame.display.update()
         fpsclock.tick(FPS)
@@ -188,9 +197,9 @@ def mainGame():
 def getRandomPipe():
     # generating poitions of pipe to display on the screen
     pipeHeight = GAME_IMAGES['pipe'][0].get_height()                # getting the height of pipe
-    offset = SCREENHEIGHT/4.5                                # setting a particular distance that should be in the screen
-    y2 = offset + random.randrange(0, int(SCREENHEIGHT - GAME_IMAGES['base'].get_height()  - 1.3 *offset))
-    pipeX = SCREENHEIGHT + 10
+    offset = SCREENHEIGHT/5                                # setting a particular distance that should be in the screen
+    y2 = offset + random.randrange(0, int(SCREENHEIGHT - GAME_IMAGES['base'].get_height()  - 1 *offset))
+    pipeX = SCREENHEIGHT + 20
 
     y1 = pipeHeight - y2 + offset                                     
     pipe = [ 
@@ -207,20 +216,20 @@ def getRandomPipe():
 
 
 def is_collide(playerx, playery, upperPipes, lowerPipes):
-    if playery > GROUNDY -65 or playery < 0:                    # means when the playery value becomes negative
-        GAME_AUDIO['die'].play()
+    if playery > GROUNDY -50 or playery < 0:                    # means when the playery value becomes negative
+        GAME_AUDIO['hit'].play()
         return True
 
     for pipe in upperPipes:
         pipeHeight = GAME_IMAGES['pipe'][0].get_height()
         if (playery < pipeHeight + pipe['y'] and abs(playerx - pipe['x']) < GAME_IMAGES['pipe'][0].get_width()):            # simply means when the player stucks in the height of pipe, it will crash
-            GAME_AUDIO['die'].play()
+            GAME_AUDIO['hit'].play()
             return True
 
 
     for pipe in lowerPipes:
-        if (playery + GAME_IMAGES['player'].get_height() > pipe['y']) and abs (playerx - pipe['x']) < GAME_IMAGES['pipe'][0].get_width():
-            GAME_AUDIO['die'].play()
+        if (playery + GAME_IMAGES['player'].get_height() > pipe['y']) and abs(playerx - pipe['x']) < GAME_IMAGES['pipe'][0].get_width():
+            GAME_AUDIO['hit'].play()
             return True
 
     return False
@@ -281,6 +290,7 @@ if __name__ == "__main__":
     fondAudPath_point = os.path.join(sourceFileDir, 'media/audio/point.wav')
     fondAudPath_swoosh = os.path.join(sourceFileDir, 'media/audio/swoosh.wav')
     fondAudPath_wing = os.path.join(sourceFileDir, 'media/audio/wing.wav')
+    fondAudPath_song = os.path.join(sourceFileDir, 'media/audio/song.mp3')
 
 
     GAME_AUDIO['die'] = pygame.mixer.Sound(fondAudPath_die)
@@ -288,6 +298,7 @@ if __name__ == "__main__":
     GAME_AUDIO['point'] = pygame.mixer.Sound(fondAudPath_point)
     GAME_AUDIO['swoosh'] = pygame.mixer.Sound(fondAudPath_swoosh)
     GAME_AUDIO['wing'] = pygame.mixer.Sound(fondAudPath_wing)
+    GAME_AUDIO['song'] = pygame.mixer.Sound(fondAudPath_song)
 
     GAME_IMAGES['background'] = pygame.image.load(BACKGROUND).convert()         # not used alpha because we don't need to run background image
     GAME_IMAGES['player'] = pygame.image.load(PLAYER).convert_alpha()
