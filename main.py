@@ -221,7 +221,7 @@ def getRandomPipe():
     pipeHeight = GAME_IMAGES['pipe'][0].get_height()                # getting the height of pipe
     offset = SCREENHEIGHT/5                                # setting a particular distance that should be in the screen
     y2 = offset + random.randrange(0, int(SCREENHEIGHT - GAME_IMAGES['base'].get_height()  - 0.5 *offset))
-    pipeX = SCREENHEIGHT + 22
+    pipeX = SCREENHEIGHT + 20
 
     y1 = pipeHeight - y2 + offset                                     
     pipe = [ 
