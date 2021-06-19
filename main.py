@@ -79,7 +79,7 @@ def mainGame():
     game_overy = int(SCREENHEIGHT/3)
 
     #reading highscore
-    with open('score.txt','r') as file:
+    with open('score.txt','r') as file:    
         hahahaha = int(file.read())
     
     
@@ -111,6 +111,7 @@ def mainGame():
     playerFlapAcc = -8                            # velocity while flapping
     PlayerFlapped = False                         # it will become true when bird will flap
 
+    
     while True:
         
         for event in pygame.event.get():
@@ -122,16 +123,6 @@ def mainGame():
                     playerVelo_Y = playerFlapAcc
                     PlayerFlapped = True
                     GAME_AUDIO['wing'].play()
-                    '''
-                speed = 30
-                while PlayerFlapped:
-                    fpsclock.tick(speed)  # NEW
-                    #bgX -= 1.4  # Move both background images back
-                    #bgX2 -= 1.4
-
-                    if basex < GAME_IMAGES['base'].get_width() * -1:  # If our bg is at the -width then reset its position
-                        basex = GAME_IMAGES['base'].get_width()
-                '''
 
         
         crashTest = is_collide(playerx, playery, upperPipes, lowerPipes)                # it will return true if the player will crash
@@ -182,8 +173,8 @@ def mainGame():
 
 
         # displaying our objects to the screen
-        #scorlling background
-        rel_bggx = bggx % GAME_IMAGES['backgame'].get_width()
+        
+        rel_bggx = bggx % GAME_IMAGES['backgame'].get_width()                                     #scorlling background
         SCREEN.blit(GAME_IMAGES['backgame'], (rel_bggx - GAME_IMAGES['backgame'].get_width(),0))
         if rel_bggx<SCREENWIDTH:
             SCREEN.blit(GAME_IMAGES['backgame'],(rel_bggx,0))
@@ -193,8 +184,7 @@ def mainGame():
             SCREEN.blit(GAME_IMAGES['pipe'][0], (upperPipe['x'], upperPipe['y']))
             SCREEN.blit(GAME_IMAGES['pipe'][1], (lowerPipe['x'], lowerPipe['y']))
 
-        #scorlling base
-        rel_basex = basex % GAME_IMAGES['base'].get_width()
+        rel_basex = basex % GAME_IMAGES['base'].get_width()                                       #scorlling base
         SCREEN.blit(GAME_IMAGES['base'], (rel_basex - GAME_IMAGES['base'].get_width(), GROUNDY))
         if rel_basex<SCREENWIDTH:
             SCREEN.blit(GAME_IMAGES['base'],(rel_basex,GROUNDY))
@@ -226,7 +216,6 @@ def mainGame():
             with open('score.txt','w') as file:
                 file.write(str(hahahaha))
             SCREEN.blit(GAME_IMAGES['over'], (game_overx, game_overy))
-            #time.sleep(0.75)
             
         
         pygame.display.update()
@@ -242,8 +231,8 @@ def getRandomPipe():
     # generating poitions of pipe to display on the screen
     pipeHeight = GAME_IMAGES['pipe'][0].get_height()                # getting the height of pipe
     offset = SCREENHEIGHT/5                                # setting a particular distance that should be in the screen
-    y2 = offset + random.randrange(0, int(SCREENHEIGHT - GAME_IMAGES['base'].get_height()  - 0.8 *offset))
-    pipeX = SCREENHEIGHT + 25
+    y2 = offset + random.randrange(10, int(SCREENHEIGHT - GAME_IMAGES['base'].get_height()  - 0.5 *offset))
+    pipeX = SCREENHEIGHT + 20
 
     y1 = pipeHeight - y2 + offset                                     
     pipe = [ 
@@ -280,8 +269,6 @@ def is_collide(playerx, playery, upperPipes, lowerPipes):
             return True
 
     return False
-
-
 
 
 
