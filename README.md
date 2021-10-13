@@ -1,10 +1,12 @@
-# Flappy Bird
+# Flappy Bird 🐦
 
-A simple Python based game using Pygames library.
+A simple Python based game using Pygames library. 🌟
 
-Press 'space' or 'up arrow' key to Start and to advance in the game. Enjoy!
+Press 'space' or 'up arrow' key to Start and to advance in the game. Enjoy! 😄
 
-### Screenshots:
+#### Check out the game application here : https://drive.google.com/file/d/1BE_M21W7PxSnIkyOEAaHsLxSKOcbgnGZ/view?usp=sharing
+
+### Screenshots: 🖼️
 
 ![intro](https://user-images.githubusercontent.com/79649501/122678489-c6168980-d204-11eb-928d-8341363f36b2.PNG)
 ![game](https://user-images.githubusercontent.com/79649501/122678482-be56e500-d204-11eb-8efd-7a631636dabc.PNG)
